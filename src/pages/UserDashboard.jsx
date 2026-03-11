@@ -49,7 +49,7 @@ const UserDashboard = () => {
     };
 
     useEffect(() => {
-        const socket = io('http://localhost:8000');
+        const socket = io('https://glow-mystery-backend.vercel.app/');
 
         orders.forEach(order => {
             socket.on(`order_status_${order.id}`, (data) => {

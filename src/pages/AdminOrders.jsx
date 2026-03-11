@@ -54,7 +54,7 @@ const AdminOrders = () => {
     useEffect(() => {
         loadOrders();
 
-        const socket = io('http://localhost:8000');
+        const socket = io('https://glow-mystery-backend.vercel.app/');
         socket.emit('join_admin_room');
         socket.on('new_order', (data) => {
             toast.info(`New order #${data.orderId} from ${data.customerName}`);

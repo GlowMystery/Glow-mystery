@@ -26,7 +26,7 @@ const ProductDetails = () => {
         if (id) {
             dispatch(fetchProductById(id));
 
-            const socket = io('http://localhost:8000');
+            const socket = io('https://glow-mystery-backend.vercel.app/');
             socket.on('product_updated', () => {
                 dispatch(fetchProductById(id));
             });

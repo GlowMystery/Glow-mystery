@@ -51,7 +51,7 @@ const AdminProducts = () => {
     useEffect(() => {
         loadProducts();
 
-        const socket = io('http://localhost:8000');
+        const socket = io('https://glow-mystery-backend.vercel.app/');
         socket.on('product_updated', () => {
             loadProducts();
         });
@@ -155,7 +155,7 @@ const AdminProducts = () => {
     const columns = [
         {
             name: 'Image',
-            cell: row => <img src={row.imageUrl?.startsWith('http') ? row.imageUrl : `http://localhost:8000${row.imageUrl}`} className="img-preview" alt="Product" />,
+            cell: row => <img src={row.imageUrl?.startsWith('http') ? row.imageUrl : `https://glow-mystery-backend.vercel.app/${row.imageUrl}`} className="img-preview" alt="Product" />,
             width: '100px'
         },
         {

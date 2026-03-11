@@ -23,7 +23,7 @@ const AdminDashboard = () => {
     useEffect(() => {
         loadDashboardData();
 
-        const socket = io('http://localhost:8000');
+        const socket = io('https://glow-mystery-backend.vercel.app/');
         socket.emit('join_admin_room');
 
         socket.on('new_order', (data) => {

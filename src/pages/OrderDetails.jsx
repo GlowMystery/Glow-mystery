@@ -27,7 +27,7 @@ const OrderDetails = () => {
 
         dispatch(fetchOrderDetails(id));
 
-        const socket = io('http://localhost:8000');
+        const socket = io('https://glow-mystery-backend.vercel.app/');
         socket.on(`order_status_${id}`, () => {
             dispatch(fetchOrderDetails(id));
         });
@@ -224,7 +224,7 @@ const OrderDetails = () => {
                             <div>
                                 {orderItems && orderItems.map((item) => {
                                     const productImg = item.product?.imageUrl
-                                        ? (item.product.imageUrl.startsWith('http') ? item.product.imageUrl : `http://localhost:8000${item.product.imageUrl}`)
+                                        ? (item.product.imageUrl.startsWith('http') ? item.product.imageUrl : `https://glow-mystery-backend.vercel.app/${item.product.imageUrl}`)
                                         : 'https://dummyimage.com/100x100/222/d8a648&text=No+Image';
 
                                     // Calculate if we should show offer text (basic check)

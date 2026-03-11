@@ -13,7 +13,7 @@ const ChatWidget = () => {
 
     useEffect(() => {
         if (isAuthenticated && user) {
-            socketRef.current = io('http://localhost:8000');
+            socketRef.current = io('https://glow-mystery-backend.vercel.app/');
 
             if (user.role === 'ADMIN') {
                 socketRef.current.emit('join_admin_room');

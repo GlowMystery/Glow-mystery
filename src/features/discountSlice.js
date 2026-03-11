@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API = 'http://localhost:8000/api/discounts';
+const API = 'https://glow-mystery-backend.vercel.app/api/discounts';
 const getToken = () => localStorage.getItem('token');
 
 export const fetchDiscounts = createAsyncThunk('discounts/fetchAll', async (_, { rejectWithValue }) => {

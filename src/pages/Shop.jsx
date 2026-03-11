@@ -17,7 +17,7 @@ const Shop = () => {
     useEffect(() => {
         dispatch(fetchProducts());
 
-        const socket = io('http://localhost:8000');
+        const socket = io('https://glow-mystery-backend.vercel.app/');
         socket.on('product_updated', () => {
             dispatch(fetchProducts());
         });
