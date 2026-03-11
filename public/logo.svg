@@ -1,0 +1,13 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#000000"/>
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b97a1d"/>
+      <stop offset="50%" stop-color="#f3c462"/>
+      <stop offset="100%" stop-color="#d8a648"/>
+    </linearGradient>
+  </defs>
+  <text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle" font-family="serif" font-size="80" fill="url(#goldGradient)" font-weight="bold">GM</text>
+  <text x="50%" y="70%" dominant-baseline="middle" text-anchor="middle" font-family="serif" font-size="18" fill="url(#goldGradient)" letter-spacing="2">GLOW MYSTERY</text>
+  <circle cx="100" cy="100" r="90" stroke="url(#goldGradient)" stroke-width="4" fill="none"/>
+</svg>
