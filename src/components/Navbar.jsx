@@ -113,13 +113,10 @@ const Navbar = () => {
 
                         {!isAdmin && (
                             <li className="nav-item ms-lg-3 d-flex align-items-center mt-2 mt-lg-0">
-                                {isAuthenticated ? (
+                                
                                     <Link to="/cart" className="btn btn-gold">
                                         <i className="bi bi-cart3"></i> Cart <span id="cartCount" className="badge bg-dark text-gold ms-1">{cartCount}</span>
                                     </Link>
-                                ) : (
-                                    <button className="btn btn-gold" onClick={() => navigate('/login')}>Get Started</button>
-                                )}
                             </li>
                         )}
                     </ul>
