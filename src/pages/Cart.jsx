@@ -60,153 +60,185 @@ const Cart = () => {
         <>
             <style>{`
 
-        .cart-section{
-            padding-top:140px;
-            padding-bottom:60px;
-            min-height:80vh;
-            background:var(--bg-dark);
-        }
+.cart-section{
+    padding-top:140px;
+    padding-bottom:60px;
+    min-height:80vh;
+    background:var(--bg-dark);
+}
 
-        .cart-header{
-            font-family:var(--font-heading);
-            color:var(--gold-light);
-            margin-bottom:40px;
-            border-bottom:1px solid rgba(216,166,72,0.2);
-            padding-bottom:15px;
-        }
+.cart-header{
+    font-family:var(--font-heading);
+    color:var(--gold-light);
+    margin-bottom:40px;
+    border-bottom:1px solid rgba(216,166,72,0.2);
+    padding-bottom:15px;
+}
 
-        .cart-item{
-            background:rgba(255,255,255,0.02);
-            border:1px solid rgba(216,166,72,0.1);
-            border-radius:8px;
-            padding:20px;
-            margin-bottom:20px;
-            display:flex;
-            align-items:center;
-            gap:15px;
-        }
+.cart-item{
+    background:rgba(255,255,255,0.02);
+    border:1px solid rgba(216,166,72,0.1);
+    border-radius:8px;
+    padding:20px;
+    margin-bottom:20px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
 
-        .cart-item img{
-            width:100px;
-            height:100px;
-            object-fit:contain;
-            background:rgba(255,255,255,0.05);
-            border-radius:8px;
-            padding:10px;
-        }
+.cart-item img{
+    width:100px;
+    height:100px;
+    object-fit:contain;
+    background:rgba(255,255,255,0.05);
+    border-radius:8px;
+    padding:10px;
+}
 
-        .cart-item-details{
-            flex-grow:1;
-            padding-left:10px;
-        }
+.cart-item-details{
+    flex-grow:1;
+}
 
-        /* DESKTOP FULL TITLE */
+.cart-item-title{
+    font-family:var(--font-heading);
+    color:var(--text-light);
+    font-size:1.1rem;
+    margin-bottom:5px;
+}
 
-        .cart-item-title{
-            font-family:var(--font-heading);
-            color:var(--text-light);
-            font-size:1.1rem;
-            margin-bottom:5px;
-            word-break:break-word;
-        }
+.cart-item-price{
+    color:var(--gold-primary);
+    font-weight:600;
+}
 
-        .cart-item-price{
-            color:var(--gold-primary);
-            font-weight:600;
-        }
+.cart-controls{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top:8px;
+}
 
-        .quantity-control{
-            display:flex;
-            align-items:center;
-            background:rgba(255,255,255,0.05);
-            border-radius:4px;
-            padding:5px 10px;
-            width:fit-content;
-        }
+.quantity-control{
+    display:flex;
+    align-items:center;
+    background:rgba(255,255,255,0.05);
+    border-radius:4px;
+    padding:5px 10px;
+}
 
-        .quantity-control button{
-            background:transparent;
-            border:none;
-            color:var(--gold-primary);
-        }
+.quantity-control button{
+    background:transparent;
+    border:none;
+    color:var(--gold-primary);
+}
 
-        .quantity-control input{
-            background:transparent;
-            border:none;
-            color:#fff;
-            text-align:center;
-            width:40px;
-        }
+.quantity-control input{
+    background:transparent;
+    border:none;
+    color:#fff;
+    text-align:center;
+    width:40px;
+}
 
-        .btn-remove{
-            color:#ff4d4d;
-            background:transparent;
-            border:none;
-            transition:0.3s;
-        }
+.btn-remove{
+    color:#ff4d4d;
+    font-size:18px;
+    background:transparent;
+    border:none;
+}
 
-        .btn-remove:hover{
-            color:#ff1a1a;
-            transform:scale(1.1);
-        }
+.btn-remove:hover{
+    color:#ff1a1a;
+}
 
-        .order-summary{
-            background:rgba(20,20,20,0.8);
-            border:1px solid rgba(216,166,72,0.3);
-            border-radius:12px;
-            padding:30px;
-            position:sticky;
-            top:100px;
-        }
+.order-summary{
+    background:rgba(20,20,20,0.8);
+    border:1px solid rgba(216,166,72,0.3);
+    border-radius:12px;
+    padding:30px;
+    position:sticky;
+    top:100px;
+}
 
-        .summary-row{
-            display:flex;
-            justify-content:space-between;
-            margin-bottom:15px;
-            color:rgba(255,255,255,0.8);
-        }
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:15px;
+    color:rgba(255,255,255,0.8);
+}
 
-        .summary-total{
-            border-top:1px solid rgba(216,166,72,0.3);
-            padding-top:15px;
-            font-weight:600;
-            color:var(--gold-light);
-            font-size:1.2rem;
-            display:flex;
-            justify-content:space-between;
-        }
+.summary-total{
+    border-top:1px solid rgba(216,166,72,0.3);
+    padding-top:15px;
+    font-weight:600;
+    color:var(--gold-light);
+    font-size:1.2rem;
+    display:flex;
+    justify-content:space-between;
+}
 
-        /* MOBILE */
+/* MOBILE */
 
-        @media (max-width:768px){
+@media (max-width:768px){
 
-            .cart-item{
-                flex-direction:column;
-                align-items:flex-start;
-            }
+.cart-item{
+    flex-direction:row;
+    align-items:center;
+    gap:12px;
+    padding:15px;
 
-            .cart-item img{
-                width:80px;
-                height:80px;
-            }
+}
 
-            .cart-item-title{
-                max-width:200px;
-                font-size:1rem;
-                white-space:nowrap;
-                overflow:hidden;
-                text-overflow:ellipsis;
-            }
+.cart-item img{
+    width:80px;
+    height:80px;
+    flex-shrink:0;
+    padding:5px;
+    // background:none;
+    box-shadow: 0 4px 15px rgba(216, 166, 72, 0.35);    
+}
 
-            .order-summary{
-                margin-top:30px;
-                position:relative;
-                top:0;
-            }
+.cart-item-details{
+    flex:1;
+    min-width:0;   /* important for text truncation */
+}
 
-        }
+.cart-item-title{
+    font-size:0.9rem;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
 
-      `}</style>
+.cart-item-price{
+    font-size:0.9rem;
+}
+
+.cart-controls{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.quantity-control{
+    padding:3px 8px;
+}
+
+.quantity-control input{
+    width:30px;
+}
+
+.order-summary{
+    margin-top:30px;
+    position:relative;
+    top:0;
+}
+
+}
+
+}
+
+`}</style>
 
             <section className="cart-section">
                 <div className="container">
@@ -243,14 +275,57 @@ const Cart = () => {
 
                                             <div className="cart-item-details">
 
-                                                <div className="d-flex justify-content-between">
+                                                <h5
+                                                    className="cart-item-title"
+                                                    title={item.name}
+                                                >
+                                                    {item.name}
+                                                </h5>
 
-                                                    <h5
-                                                        className="cart-item-title"
-                                                        title={item.name}
-                                                    >
-                                                        {item.name}
-                                                    </h5>
+                                                <p className="cart-item-price mb-2">
+                                                    ₹{(parseFloat(item.price) || 0).toFixed(2)}
+                                                </p>
+
+                                                <div className="cart-controls">
+
+                                                    <div className="quantity-control">
+
+                                                        <button
+                                                            onClick={() =>
+                                                                dispatch(
+                                                                    updateQuantity({
+                                                                        productId: item.productId,
+                                                                        quantity: Math.max(
+                                                                            1,
+                                                                            (parseInt(item.quantity) || 1) - 1
+                                                                        )
+                                                                    })
+                                                                )
+                                                            }
+                                                        >
+                                                            <i className="bi bi-dash"></i>
+                                                        </button>
+
+                                                        <input
+                                                            type="text"
+                                                            value={parseInt(item.quantity) || 1}
+                                                            readOnly
+                                                        />
+
+                                                        <button
+                                                            onClick={() =>
+                                                                dispatch(
+                                                                    updateQuantity({
+                                                                        productId: item.productId,
+                                                                        quantity: (parseInt(item.quantity) || 1) + 1
+                                                                    })
+                                                                )
+                                                            }
+                                                        >
+                                                            <i className="bi bi-plus"></i>
+                                                        </button>
+
+                                                    </div>
 
                                                     <button
                                                         className="btn-remove"
@@ -259,49 +334,6 @@ const Cart = () => {
                                                         }
                                                     >
                                                         <i className="bi bi-trash3"></i>
-                                                    </button>
-
-                                                </div>
-
-                                                <p className="cart-item-price mb-2">
-                                                    ₹{(parseFloat(item.price) || 0).toFixed(2)}
-                                                </p>
-
-                                                <div className="quantity-control">
-
-                                                    <button
-                                                        onClick={() =>
-                                                            dispatch(
-                                                                updateQuantity({
-                                                                    productId: item.productId,
-                                                                    quantity: Math.max(
-                                                                        1,
-                                                                        (parseInt(item.quantity) || 1) - 1
-                                                                    )
-                                                                })
-                                                            )
-                                                        }
-                                                    >
-                                                        <i className="bi bi-dash"></i>
-                                                    </button>
-
-                                                    <input
-                                                        type="text"
-                                                        value={parseInt(item.quantity) || 1}
-                                                        readOnly
-                                                    />
-
-                                                    <button
-                                                        onClick={() =>
-                                                            dispatch(
-                                                                updateQuantity({
-                                                                    productId: item.productId,
-                                                                    quantity: (parseInt(item.quantity) || 1) + 1
-                                                                })
-                                                            )
-                                                        }
-                                                    >
-                                                        <i className="bi bi-plus"></i>
                                                     </button>
 
                                                 </div>
@@ -370,6 +402,7 @@ const Cart = () => {
                     </div>
                 </div>
             </section>
+
         </>
     );
 };
