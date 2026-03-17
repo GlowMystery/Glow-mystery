@@ -213,6 +213,19 @@ const OrderDetails = () => {
                 .price-row.info { font-size: 0.85rem; margin-bottom: 6px; }
                 .price-row.info span:last-child { font-weight: 600; }
                 .dashed-top { border-top: 1px dashed rgba(255, 255, 255, 0.2) !important; }
+                
+                @media (max-width: 768px) {
+                    .details-card { padding: 16px; margin-bottom: 15px; }
+                    .product-img { width: 70px; height: 70px; margin-bottom: 15px; }
+                    .row.align-items-center { flex-direction: column; align-items: flex-start !important; }
+                    .col-auto { padding-left: 12px; }
+                    .order-details-section { padding-top: 100px; }
+                    .details-header { font-size: 1.5rem; }
+                    .timeline-content h6 { font-size: 0.9rem; }
+                    .timeline-content p { font-size: 0.75rem; }
+                    .price-row { font-size: 0.85rem; }
+                    .price-row.total { font-size: 1rem; }
+                }
             `}</style>
 
             <section className="order-details-section">
@@ -236,8 +249,14 @@ const OrderDetails = () => {
                                                 <div className="col-auto">
                                                     <img src={productImg} alt={item.product?.name} className="product-img" />
                                                 </div>
-                                                <div className="col">
-                                                    <h5 className="text-white mb-2 fs-5">{item.product?.name || 'Unknown Product'}</h5>
+                                                <div className="col" style={{ minWidth: 0 }}>
+                                                    <h5 className="text-white mb-2 fs-5 text-truncate">
+                                                        {(() => {
+                                                            const name = item.product?.name || 'Unknown Product';
+                                                            const words = name.split(' ');
+                                                            return words.length > 30 ? words.slice(0, 30).join(' ') + '...' : name;
+                                                        })()}
+                                                    </h5>
                                                     <p className="text-white-50 small mb-2">Quantity: {item.quantity} &bull; Seller: Glow Mystery</p>
                                                     <div className="d-flex align-items-center mb-0">
                                                         <span className="text-white fs-5 fw-bold me-3">₹{(item.price || 0).toFixed(2)}</span>

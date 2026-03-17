@@ -93,24 +93,18 @@ const UserDashboard = () => {
                 
                 @media (max-width: 768px) {
                     .new-order-card { flex-direction: column; align-items: flex-start; }
-                    .order-details-col { padding: 15px 0; width: 100%; }
-                    .order-price-col { text-align: left !important; width: 100%; margin-bottom: 10px; }
+                    .new-order-card .d-flex { width: 100%; align-items: flex-start !important; }
+                    .order-details-col { padding: 0 10px; width: 100%; overflow: hidden; }
+                    .order-details-col h5 { font-size: 1rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+                    .order-product-img { width: 60px; height: 60px; }
+                    .order-price-col { text-align: left !important; width: 100%; margin: 10px 0; font-size: 1rem; }
                     .order-status-col { text-align: left !important; width: 100%; }
                     .status-dot { display: inline-block; }
                     .order-status-col .d-flex { justify-content: flex-start !important; }
                 }
-                    .order-search-input::placeholder {
-  color: white;
-  opacity: 1;
-}
-
-.order-search-input::-webkit-input-placeholder {
-  color: white;
-}
-
-.order-search-input::-ms-input-placeholder {
-  color: white;
-}
+                .order-search-input::placeholder { color: white; opacity: 1; }
+                .order-search-input::-webkit-input-placeholder { color: white; }
+                .order-search-input::-ms-input-placeholder { color: white; }
             `}</style>
             <section className="dashboard-section">
                 <div className="container">
@@ -161,7 +155,7 @@ const UserDashboard = () => {
                                                 color: '#fff',
                                                 border: '1px solid rgba(216, 166, 72, 0.3)'
                                             }}
-                                        />                                        <button type="submit" className="btn btn-gold px-4"><i className="bi bi-search me-2"></i> Search Orders</button>
+                                        />                                        <button type="submit" className="btn btn-gold px-4"><i className="bi bi-search"></i></button>
                                     </form>
                                 </div>
                             </div>
@@ -183,7 +177,9 @@ const UserDashboard = () => {
                                             const productImg = mainItem.product.imageUrl
                                                 ? (mainItem.product.imageUrl.startsWith('http') ? mainItem.product.imageUrl : `http://localhost:8000${mainItem.product.imageUrl}`)
                                                 : 'https://dummyimage.com/80x80/222/d8a648&text=Pic';
-                                            const productName = mainItem.product.name;
+                                            const fullProductName = mainItem.product.name || 'Unknown Product';
+                                            const productNameWords = fullProductName.split(' ');
+                                            const productName = productNameWords.length > 30 ? productNameWords.slice(0, 30).join(' ') + '...' : fullProductName;
 
                                             return (
                                                 <div className="new-order-card" key={order.id}>
