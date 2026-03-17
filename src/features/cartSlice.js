@@ -3,10 +3,10 @@ import apiClient from '../api/apiClient';
 
 export const checkoutCart = createAsyncThunk('cart/checkoutCart', async (checkoutData, { rejectWithValue }) => {
     try {
-        const { orderItems, totalAmount } = checkoutData;
+        const { orderItems, totalAmount, shippingAddress } = checkoutData;
 
         // 1. Create order in DB
-        const orderRes = await apiClient.post('/orders', { orderItems, totalAmount });
+        const orderRes = await apiClient.post('/orders', { orderItems, totalAmount, shippingAddress });
         const orderData = orderRes.data;
 
         // 2. Create Razorpay order
@@ -20,7 +20,7 @@ export const checkoutCart = createAsyncThunk('cart/checkoutCart', async (checkou
         // 3. Open Razorpay Modal
         return new Promise((resolve, reject) => {
             const options = {
-                key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_live_SQMg21bnaHNxW3',
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_SPaPgXRq8uN8Nu',
                 amount: rzpData.amount,
                 currency: rzpData.currency,
                 name: "Glow Mystery",

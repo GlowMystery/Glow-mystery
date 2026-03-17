@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateQuantity, removeFromCart, selectCartTotal, checkoutCart, clearCart } from '../features/cartSlice';
 import { Link, useNavigate } from 'react-router-dom';
@@ -15,7 +15,21 @@ const Cart = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const handleCheckout = async () => {
+    const [showAddressForm, setShowAddressForm] = useState(false);
+    const [address, setAddress] = useState({
+        name: '',
+        phone: '',
+        street: '',
+        city: '',
+        state: '',
+        zip: ''
+    });
+
+    const handleAddressChange = (e) => {
+        setAddress({ ...address, [e.target.name]: e.target.value });
+    };
+
+    const handleProceedToCheckout = () => {
 
         if (!isAuthenticated) {
             toast.warning('Please login to proceed to checkout.');
@@ -23,8 +37,13 @@ const Cart = () => {
             return;
         }
 
-        try {
+        setShowAddressForm(true);
+    };
 
+    const submitCheckout = async (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+
+        try {
             const orderItems = items.map(i => ({
                 productId: i.productId,
                 name: i.name || 'Glow Mystery Product',
@@ -35,12 +54,13 @@ const Cart = () => {
             const totalAmount = total;
 
             const res = await dispatch(
-                checkoutCart({ orderItems, totalAmount })
+                checkoutCart({ orderItems, totalAmount, shippingAddress: address })
             ).unwrap();
 
             if (res && res.success) {
 
                 dispatch(clearCart());
+                setShowAddressForm(false);
                 toast.success('Payment successful.');
                 navigate('/dashboard');
 
@@ -260,6 +280,40 @@ const Cart = () => {
                                     </Link>
                                 </div>
 
+                            ) : showAddressForm ? (
+
+                                <div className="address-form-container p-4" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(216,166,72,0.1)', borderRadius: '8px' }}>
+                                    <h4 className="text-gold mb-4" style={{ fontFamily: 'var(--font-heading)' }}>Shipping Address</h4>
+                                    <form id="shipping-form" onSubmit={submitCheckout}>
+                                        <div className="row">
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label text-light">Full Name</label>
+                                                <input type="text" className="form-control bg-dark text-light border-secondary" name="name" value={address.name} onChange={handleAddressChange} required />
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label text-light">Phone</label>
+                                                <input type="text" className="form-control bg-dark text-light border-secondary" name="phone" value={address.phone} onChange={handleAddressChange} required />
+                                            </div>
+                                            <div className="col-12 mb-3">
+                                                <label className="form-label text-light">Street Address</label>
+                                                <textarea className="form-control bg-dark text-light border-secondary" name="street" rows="2" value={address.street} onChange={handleAddressChange} required></textarea>
+                                            </div>
+                                            <div className="col-md-4 mb-3">
+                                                <label className="form-label text-light">City</label>
+                                                <input type="text" className="form-control bg-dark text-light border-secondary" name="city" value={address.city} onChange={handleAddressChange} required />
+                                            </div>
+                                            <div className="col-md-4 mb-3">
+                                                <label className="form-label text-light">State</label>
+                                                <input type="text" className="form-control bg-dark text-light border-secondary" name="state" value={address.state} onChange={handleAddressChange} required />
+                                            </div>
+                                            <div className="col-md-4 mb-3">
+                                                <label className="form-label text-light">ZIP Code</label>
+                                                <input type="text" className="form-control bg-dark text-light border-secondary" name="zip" value={address.zip} onChange={handleAddressChange} required />
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
                             ) : (
 
                                 <div>
@@ -384,11 +438,30 @@ const Cart = () => {
                                         <Loader overlay={true} />
                                     </div>
 
+                                ) : showAddressForm ? (
+
+                                    <div className="d-flex flex-column gap-3 mt-4">
+                                        <button
+                                            form="shipping-form"
+                                            type="submit"
+                                            className="btn btn-gold w-100 btn-lg"
+                                        >
+                                            Confirm & Pay
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="btn btn-outline-secondary w-100"
+                                            onClick={() => setShowAddressForm(false)}
+                                        >
+                                            Back to Cart
+                                        </button>
+                                    </div>
+
                                 ) : (
 
                                     <button
                                         className="btn btn-gold w-100 mt-4 btn-lg"
-                                        onClick={handleCheckout}
+                                        onClick={handleProceedToCheckout}
                                     >
                                         Proceed to Checkout
                                     </button>
