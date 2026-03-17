@@ -157,12 +157,12 @@ const AdminOrders = () => {
                 <div className="row">
                     <div className="col-md-4 mb-3 mb-md-0">
                         <h6 className="text-gold border-bottom border-secondary pb-1">Delivery Address</h6>
-                        {data.shippingAddress ? (
+                        {data.shippingStreet ? (
                             <div className="text-white-50 small">
-                                <div className="fw-bold">{data.shippingAddress.name}</div>
-                                <div>{data.shippingAddress.addressLine1} {data.shippingAddress.addressLine2}</div>
-                                <div>{data.shippingAddress.city}, {data.shippingAddress.state} {data.shippingAddress.postalCode}</div>
-                                <div>Phone: {data.user?.phone || 'N/A'}</div>
+                                <div className="fw-bold">{data.shippingName}</div>
+                                <div>{data.shippingStreet}</div>
+                                <div>{data.shippingCity}, {data.shippingState} {data.shippingZip}</div>
+                                <div>Phone: {data.shippingPhone || data.user?.phone || 'N/A'}</div>
                             </div>
                         ) : (
                             <span className="text-white-50 small">No shipping address provided.</span>
