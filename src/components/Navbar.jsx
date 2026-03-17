@@ -81,12 +81,34 @@ const Navbar = () => {
     );
   };
 
+  // Nav links shared between mobile and desktop
+  const navLinks = [
+    { to: '/', label: 'Home' },
+    { to: '/about', label: 'About' },
+    { to: '/shop', label: 'Products' },
+    { to: '/services', label: 'Services' },
+    { to: '/portfolio', label: 'Portfolio' },
+    { to: '/contact', label: 'Contact' },
+  ];
+
   return (
     <>
       <style>{`
-        @media (max-width:768px){
-          .brand-text { display:none; }
-          .brand-logo img { width:35px; }
+        @media (max-width: 768px) {
+          .brand-text { display: none; }
+          .brand-logo img { width: 35px; }
+        }
+
+        /* Mobile-only My Orders link */
+        .nav-my-orders-mobile { display: none; }
+        @media (max-width: 991.98px) {
+          .nav-my-orders-mobile { display: list-item; }
+        }
+
+        /* Divider before My Orders on mobile */
+        .mobile-divider {
+          border-top: 1px solid rgba(216, 166, 72, 0.2);
+          margin: 4px 0;
         }
       `}</style>
 
@@ -96,6 +118,7 @@ const Navbar = () => {
         }`}
       >
         <div className="container d-flex align-items-center">
+
           {/* LOGO */}
           <Link className="navbar-brand brand-logo d-flex align-items-center" to="/">
             <img
@@ -106,7 +129,7 @@ const Navbar = () => {
             <span className="brand-text">GLOW MYSTERY</span>
           </Link>
 
-          {/* CART BUTTON ALWAYS VISIBLE (Mobile) */}
+          {/* CART BUTTON — always visible on mobile (outside collapse) */}
           {!isAdmin && (
             <Link to="/cart" className="btn btn-gold ms-auto me-2 d-lg-none">
               <i className="bi bi-cart3"></i>
@@ -120,62 +143,47 @@ const Navbar = () => {
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#menu"
+            aria-controls="menu"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
           >
             <span className="navbar-toggler-icon"></span>
           </button>
 
           <div className="collapse navbar-collapse" id="menu">
+
+            {/* ── Main nav links (non-admin) ── */}
             {!isAdmin && (
               <ul className="navbar-nav ms-auto">
-                <li className="nav-item">
-                  <Link className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} to="/">
-                    Home
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link
-                    className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}
-                    to="/about"
-                  >
-                    About
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link
-                    className={`nav-link ${location.pathname === '/shop' ? 'active' : ''}`}
-                    to="/shop"
-                  >
-                    Products
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link
-                    className={`nav-link ${location.pathname === '/services' ? 'active' : ''}`}
-                    to="/services"
-                  >
-                    Services
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link
-                    className={`nav-link ${location.pathname === '/portfolio' ? 'active' : ''}`}
-                    to="/portfolio"
-                  >
-                    Portfolio
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link
-                    className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`}
-                    to="/contact"
-                  >
-                    Contact
-                  </Link>
-                </li>
+                {navLinks.map(({ to, label }) => (
+                  <li className="nav-item" key={to}>
+                    <Link
+                      className={`nav-link ${location.pathname === to ? 'active' : ''}`}
+                      to={to}
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+
+                {/* My Orders — mobile only, shown below nav links when authenticated */}
+                {isAuthenticated && (
+                  <li className="nav-my-orders-mobile">
+                    <div className="mobile-divider"></div>
+                    <Link
+                      className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`}
+                      to="/dashboard"
+                      style={{ color: 'var(--gold-primary)' }}
+                    >
+                      <i className="bi me-1"></i> My Orders
+                    </Link>
+                  </li>
+                )}
               </ul>
             )}
 
-            <ul className="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+            {/* ── Auth + Desktop Cart ── */}
+            <ul className="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
               {isAuthenticated ? (
                 <li className="nav-item dropdown">
                   <a
@@ -184,18 +192,19 @@ const Navbar = () => {
                     id="userDropdown"
                     role="button"
                     data-bs-toggle="dropdown"
+                    aria-expanded="false"
                     style={{ color: 'var(--gold-primary)' }}
                   >
                     {getAvatarHtml()}
                   </a>
-                  <ul className="dropdown-menu dropdown-menu-dark">
+                  <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                     <li>
                       <Link className="dropdown-item" to="/profile">
                         My Profile
                       </Link>
                     </li>
                     {!isAdmin ? (
-                      <li>
+                      <li className="d-none d-lg-block">
                         <Link className="dropdown-item" to="/dashboard">
                           My Orders
                         </Link>
@@ -207,9 +216,7 @@ const Navbar = () => {
                         </Link>
                       </li>
                     )}
-                    <li>
-                      <hr className="dropdown-divider" />
-                    </li>
+                    <li><hr className="dropdown-divider" /></li>
                     <li>
                       <a className="dropdown-item" href="#" onClick={handleLogout}>
                         Logout
@@ -219,7 +226,11 @@ const Navbar = () => {
                 </li>
               ) : (
                 <li className="nav-item">
-                  <Link className="nav-link" to="/login" style={{ color: 'var(--gold-primary)' }}>
+                  <Link
+                    className="nav-link"
+                    to="/login"
+                    style={{ color: 'var(--gold-primary)' }}
+                  >
                     Login / Register
                   </Link>
                 </li>
@@ -235,6 +246,7 @@ const Navbar = () => {
                 </li>
               )}
             </ul>
+
           </div>
         </div>
       </nav>

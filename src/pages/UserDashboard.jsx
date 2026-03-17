@@ -53,8 +53,6 @@ const UserDashboard = () => {
 
         orders.forEach(order => {
             socket.on(`order_status_${order.id}`, (data) => {
-                // To keep state in sync, real-time re-fetch is best or we dispatch a slice action to update only status
-                // But re-fetch maintains pagination properly without complex manual slice updates
                 loadOrders(pagination.page);
             });
         });
@@ -74,11 +72,25 @@ const UserDashboard = () => {
                 .dashboard-header { font-family: var(--font-heading); color: var(--gold-primary); margin-bottom: 30px; border-bottom: 1px solid rgba(216, 166, 72, 0.2); padding-bottom: 15px; }
                 .new-order-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(216, 166, 72, 0.3); border-radius: 6px; padding: 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s ease-in-out; }
                 .new-order-card:hover { box-shadow: 0 4px 15px rgba(216, 166, 72, 0.1); border-color: var(--gold-primary); }
-                .order-product-img { width: 80px; height: 80px; object-fit: cover; border-radius: 6px; background: #f8f9fa; }
-                .order-details-col { flex-grow: 1; padding: 0 25px; }
+                .order-product-img { width: 80px; height: 80px; object-fit: cover; border-radius: 6px; background: #f8f9fa; flex-shrink: 0; transition: opacity 0.2s, transform 0.2s; }
+                .order-product-img:hover { opacity: 0.8; transform: scale(1.04); }
+                .order-details-col { flex-grow: 1; padding: 0 25px; min-width: 0; }
+                .order-product-name {
+                    color: #fff;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                    text-decoration: none;
+                    display: block;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    transition: color 0.2s;
+                    margin-bottom: 4px;
+                }
+                .order-product-name:hover { color: var(--gold-primary); }
                 .order-price-col { min-width: 100px; font-weight: 600; color: #fff; }
                 .order-status-col { min-width: 150px; text-align: right; }
-                .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+                .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; flex-shrink: 0; }
                 .status-dot.delivered { background-color: #28a745; }
                 .status-dot.shipped { background-color: #17a2b8; }
                 .status-dot.cancelled { background-color: #dc3545; }
@@ -90,14 +102,14 @@ const UserDashboard = () => {
                 .page-link { background-color: transparent; border-color: rgba(216, 166, 72, 0.3); color: var(--gold-light); }
                 .page-link:hover { background-color: rgba(216, 166, 72, 0.1); border-color: var(--gold-primary); color: var(--gold-primary); }
                 .page-item.active .page-link { background-color: var(--gold-primary); border-color: var(--gold-primary); color: #000; }
-                
+
                 @media (max-width: 768px) {
-                    .new-order-card { flex-direction: column; align-items: flex-start; }
+                    .new-order-card { flex-direction: column; align-items: flex-start; gap: 12px; }
                     .new-order-card .d-flex { width: 100%; align-items: flex-start !important; }
                     .order-details-col { padding: 0 10px; width: 100%; overflow: hidden; }
-                    .order-details-col h5 { font-size: 1rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+                    .order-product-name { font-size: 0.95rem; }
                     .order-product-img { width: 60px; height: 60px; }
-                    .order-price-col { text-align: left !important; width: 100%; margin: 10px 0; font-size: 1rem; }
+                    .order-price-col { text-align: left !important; width: 100%; margin: 4px 0; font-size: 1rem; }
                     .order-status-col { text-align: left !important; width: 100%; }
                     .status-dot { display: inline-block; }
                     .order-status-col .d-flex { justify-content: flex-start !important; }
@@ -113,6 +125,7 @@ const UserDashboard = () => {
                     </div>
 
                     <div className="row">
+                        {/* Filters sidebar */}
                         <div className="col-md-3 mb-4">
                             <div className="filters-sidebar p-4" style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(216, 166, 72, 0.2)', borderRadius: '8px' }}>
                                 <h5 className="text-white mb-3 fw-bold">Filters</h5>
@@ -140,6 +153,7 @@ const UserDashboard = () => {
                             </div>
                         </div>
 
+                        {/* Orders list */}
                         <div className="col-md-9 mb-4">
                             <div className="row align-items-center mb-4">
                                 <div className="col-12">
@@ -150,12 +164,9 @@ const UserDashboard = () => {
                                             placeholder="Search your orders here by product name..."
                                             value={search}
                                             onChange={e => setSearch(e.target.value)}
-                                            style={{
-                                                background: 'rgba(255, 255, 255, 0.05)',
-                                                color: '#fff',
-                                                border: '1px solid rgba(216, 166, 72, 0.3)'
-                                            }}
-                                        />                                        <button type="submit" className="btn btn-gold px-4"><i className="bi bi-search"></i></button>
+                                            style={{ background: 'rgba(255, 255, 255, 0.05)', color: '#fff', border: '1px solid rgba(216, 166, 72, 0.3)' }}
+                                        />
+                                        <button type="submit" className="btn btn-gold px-4"><i className="bi bi-search"></i></button>
                                     </form>
                                 </div>
                             </div>
@@ -183,19 +194,39 @@ const UserDashboard = () => {
 
                                             return (
                                                 <div className="new-order-card" key={order.id}>
-                                                    <div className="d-flex align-items-center flex-grow-1">
-                                                        <img src={productImg} alt="Product" className="order-product-img" />
+                                                    {/* Image + Name row */}
+                                                    <div className="d-flex align-items-center flex-grow-1" style={{ minWidth: 0 }}>
+                                                        {/* Clickable image */}
+                                                        <Link to={`/product/${mainItem.productId}`} style={{ flexShrink: 0 }}>
+                                                            <img
+                                                                src={productImg}
+                                                                alt="Product"
+                                                                className="order-product-img"
+                                                            />
+                                                        </Link>
+
                                                         <div className="order-details-col">
-                                                            <h5 className="text-white mb-1 fs-5">{productName}</h5>
-                                                            {order.orderItems.length > 1 && <><br /><small className="text-white-50">and {order.orderItems.length - 1} other item(s)</small></>}
+                                                            {/* Clickable product name */}
+                                                            <Link
+                                                                to={`/product/${mainItem.productId}`}
+                                                                className="order-product-name"
+                                                            >
+                                                                {productName}
+                                                            </Link>
+
+                                                            {order.orderItems.length > 1 && (
+                                                                <small className="text-white-50">and {order.orderItems.length - 1} other item(s)</small>
+                                                            )}
                                                             <div className="mt-2"><small className="text-white-50">{date}</small></div>
                                                         </div>
                                                     </div>
 
+                                                    {/* Price */}
                                                     <div className="order-price-col text-end me-4">
                                                         <span className="fs-5">₹{order.totalAmount.toFixed(2)}</span>
                                                     </div>
 
+                                                    {/* Status + actions */}
                                                     <div className="order-status-col text-end">
                                                         <div className="mb-2 d-flex justify-content-end align-items-center">
                                                             <span className={`status-dot ${order.status.toLowerCase()}`}></span>
