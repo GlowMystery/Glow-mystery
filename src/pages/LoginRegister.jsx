@@ -41,6 +41,13 @@ const LoginRegister = () => {
         setRegError('');
         try {
             await dispatch(registerUser({ name: regName, email: regEmail, password: regPassword })).unwrap();
+               // ✅ 🔥 META PIXEL REGISTER EVENT
+        if (window.fbq) {
+            window.fbq('track', 'CompleteRegistration', {
+                content_name: 'User Registration',
+                status: true
+            });
+        }
             localStorage.setItem('pendingVerificationEmail', regEmail);
             navigate('/verify-otp');
         } catch (err) {

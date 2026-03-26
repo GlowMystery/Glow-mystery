@@ -58,6 +58,18 @@ const Cart = () => {
             ).unwrap();
 
             if (res && res.success) {
+                // ✅ 🔥 META PIXEL PURCHASE EVENT
+                if (window.fbq) {
+                    window.fbq('track', 'Purchase', {
+                        value: totalAmount,
+                        currency: 'INR',
+                        contents: orderItems.map(item => ({
+                            id: item.productId,
+                            quantity: item.quantity
+                        })),
+                        content_type: 'product'
+                    });
+                }
 
                 dispatch(clearCart());
                 setShowAddressForm(false);

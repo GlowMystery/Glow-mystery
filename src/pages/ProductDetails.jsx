@@ -41,6 +41,18 @@ const ProductDetails = () => {
         }
     }, [id, dispatch]);
 
+    // ✅ 🔥 META PIXEL ViewContent EVENT
+    useEffect(() => {
+        if (product && window.fbq) {
+            window.fbq('track', 'ViewContent', {
+                content_name: product.name,
+                content_ids: [product.id],
+                value: product.price,
+                currency: 'INR'
+            });
+        }
+    }, [product]);
+
     const handleAddToCart = (e) => {
         e.preventDefault();
         if (product) {
@@ -306,7 +318,7 @@ const ProductDetails = () => {
                                 <div className="col-lg-6 col-md-6 mb-3 mb-lg-0">
                                     <div className="product-image-container">
                                         <div className="product-glow" style={{ left: '50%', top: '50%', transform: 'translate(-50%,-50%)' }}></div>
-                                        
+
                                         <img src={product.imageUrl || '/creambg.png'} alt={product.name} style={{ position: 'relative', zIndex: 2 }} />
                                     </div>
                                 </div>

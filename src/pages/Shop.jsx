@@ -50,6 +50,17 @@ const Shop = () => {
             quantity: 1,
             stock: product.stock !== undefined ? product.stock : 100
         }));
+
+           // ✅ 🔥 META PIXEL EVENT HERE
+    if (window.fbq) {
+        window.fbq('track', 'AddToCart', {
+            content_name: product.name,
+            content_ids: [product.id],
+            value: product.price,
+            currency: 'INR'
+        });
+    }
+
         const btn = e.target;
         const originalText = btn.innerText;
         btn.innerText = 'Added ✓';
