@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const API_URL = 'http://localhost:8000/api/wishlist'; // Local backend
+const API_URL = 'https://glow-mystery-backend.vercel.app/api/wishlist'; // Local backend
 
 // Async thunks
 export const fetchWishlist = createAsyncThunk(
