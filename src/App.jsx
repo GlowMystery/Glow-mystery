@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Routes, Route, Outlet, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from './features/authSlice';
+import { fetchWishlist } from './features/wishlistSlice';
 
 // Shared Components
 import Navbar from './components/Navbar';
@@ -38,6 +39,7 @@ import AdminOrders from './pages/AdminOrders';
 import AdminUsers from './pages/AdminUsers';
 import AdminReviews from './pages/AdminReviews';
 import AdminDiscounts from './pages/AdminDiscounts';
+import Wishlist from './pages/Wishlist';
 
 // Layout for user-facing pages that require Navbar/Footer
 const MainLayout = () => {
@@ -60,6 +62,7 @@ function App() {
     const savedToken = localStorage.getItem('token');
     if (savedUser && savedToken) {
       dispatch(loginSuccess({ user: JSON.parse(savedUser), token: savedToken }));
+      dispatch(fetchWishlist());
     }
   }, [dispatch]);
 
@@ -92,6 +95,7 @@ function App() {
           <Route path="/dashboard" element={<UserDashboard />} />
           <Route path="/dashboard/order/:id" element={<OrderDetails />} />
           <Route path="/success" element={<Success />} />
+          <Route path="/wishlist" element={<Wishlist />} />
         </Route>
 
         {/* Admin Dashboard - Has its own Layout */}

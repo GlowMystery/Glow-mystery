@@ -7,6 +7,7 @@ import reviewReducer from '../features/reviewSlice';
 import chatReducer from '../features/chatSlice';
 import adminReducer from '../features/adminSlice';
 import discountReducer from '../features/discountSlice';
+import wishlistReducer from '../features/wishlistSlice';
 
 export const store = configureStore({
     reducer: {
@@ -18,5 +19,6 @@ export const store = configureStore({
         chat: chatReducer,
         admin: adminReducer,
         discounts: discountReducer,
+        wishlist: wishlistReducer,
     },
 });

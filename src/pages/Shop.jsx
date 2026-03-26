@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, selectIsItemInCart } from '../features/cartSlice';
 import { fetchProducts } from '../features/productSlice';
+import { toggleWishlist, selectIsItemInWishlist } from '../features/wishlistSlice';
 import Loader from '../components/Loader';
 import { toast } from 'react-toastify';
 import { io } from 'socket.io-client';
@@ -11,6 +12,7 @@ const Shop = () => {
     const dispatch = useDispatch();
     const { products, loading, error } = useSelector((state) => state.product);
     const cartItems = useSelector((state) => state.cart.items);
+    const wishlistItems = useSelector((state) => state.wishlist.items);
 
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -51,15 +53,15 @@ const Shop = () => {
             stock: product.stock !== undefined ? product.stock : 100
         }));
 
-           // ✅ 🔥 META PIXEL EVENT HERE
-    if (window.fbq) {
-        window.fbq('track', 'AddToCart', {
-            content_name: product.name,
-            content_ids: [product.id],
-            value: product.price,
-            currency: 'INR'
-        });
-    }
+        // ✅ 🔥 META PIXEL EVENT HERE
+        if (window.fbq) {
+            window.fbq('track', 'AddToCart', {
+                content_name: product.name,
+                content_ids: [product.id],
+                value: product.price,
+                currency: 'INR'
+            });
+        }
 
         const btn = e.target;
         const originalText = btn.innerText;
@@ -67,6 +69,19 @@ const Shop = () => {
         setTimeout(() => { btn.innerText = originalText; }, 1500);
     };
 
+
+    const handleToggleWishlist = (e, productId) => {
+        e.preventDefault();
+        dispatch(toggleWishlist(productId));
+        if (window.fbq && product) {
+            window.fbq('track', 'AddToWishlist', {
+                content_name: product.name,
+                content_ids: [product.id],
+                value: product.price,
+                currency: 'INR'
+            });
+        }
+    };
 
     return (
         <>
@@ -139,9 +154,22 @@ const Shop = () => {
                                     <div className="card bg-transparent border-0 h-100">
                                         <div className="card-body text-center p-4 product-card">
                                             <div className="mb-4 position-relative">
-                                                {/* <div style={{ position: 'absolute', top: 0, right: 0, background: 'var(--gold-primary)', color: '#000', padding: '5px 10px', fontWeight: 'bold', borderRadius: '4px', fontSize: '0.8rem', zIndex: 2 }}>
-                                                    40% OFF
-                                                </div> */}
+                                                <button
+                                                    onClick={(e) => handleToggleWishlist(e, p.id)}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: '10px',
+                                                        right: '10px',
+                                                        background: 'transparent',
+                                                        border: 'none',
+                                                        fontSize: '1.5rem',
+                                                        color: wishlistItems.some(item => Number(item.productId) === Number(p.id)) ? 'var(--gold-primary)' : 'rgba(255, 255, 255, 0.5)',
+                                                        zIndex: 2,
+                                                        transition: 'color 0.3s ease'
+                                                    }}
+                                                >
+                                                    <i className={wishlistItems.some(item => Number(item.productId) === Number(p.id)) ? "bi bi-heart-fill" : "bi bi-heart"}></i>
+                                                </button>
                                                 <Link to={`/product/${p.id}`} className="product-img-wrapper">
                                                     <img src={p.imageUrl || defaultImage} alt={p.name} className="img-fluid" />
                                                 </Link>

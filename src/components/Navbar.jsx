@@ -131,10 +131,12 @@ const Navbar = () => {
 
           {/* CART BUTTON — always visible on mobile (outside collapse) */}
           {!isAdmin && (
-            <Link to="/cart" className="btn btn-gold ms-auto me-2 d-lg-none">
-              <i className="bi bi-cart3"></i>
-              <span className="badge bg-dark text-gold ms-1">{cartCount}</span>
-            </Link>
+            <div className="d-flex align-items-center ms-auto me-2 d-lg-none gap-2">
+              <Link to="/cart" className="btn btn-gold">
+                <i className="bi bi-cart3"></i>
+                <span className="badge bg-dark text-gold ms-1">{cartCount}</span>
+              </Link>
+            </div>
           )}
 
           {/* MOBILE TOGGLER */}
@@ -203,6 +205,11 @@ const Navbar = () => {
                         My Profile
                       </Link>
                     </li>
+                    <li>
+                      <Link className="dropdown-item" to="/wishlist">
+                        My Wishlist
+                      </Link>
+                    </li>
                     {!isAdmin ? (
                       <li className="d-none d-lg-block">
                         <Link className="dropdown-item" to="/dashboard">
@@ -238,7 +245,7 @@ const Navbar = () => {
 
               {/* DESKTOP CART */}
               {!isAdmin && (
-                <li className="nav-item ms-lg-3 d-none d-lg-block">
+                <li className="nav-item ms-lg-3 d-none d-lg-flex align-items-center gap-3">
                   <Link to="/cart" className="btn btn-gold">
                     <i className="bi bi-cart3"></i> Cart
                     <span className="badge bg-dark text-gold ms-1">{cartCount}</span>

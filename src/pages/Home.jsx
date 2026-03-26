@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../features/cartSlice';
 import { fetchProducts } from '../features/productSlice';
 import { fetchProfile } from '../features/authSlice';
+import { toggleWishlist } from '../features/wishlistSlice';
 import Loader from '../components/Loader';
 import { toast } from 'react-toastify';
 import { io } from 'socket.io-client';
@@ -13,6 +14,7 @@ const Home = () => {
     const { isAuthenticated, loading: authLoading } = useSelector((state) => state.auth);
     const { products, loading: productsLoading } = useSelector((state) => state.product);
     const cartItems = useSelector((state) => state.cart.items);
+    const wishlistItems = useSelector((state) => state.wishlist.items);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -50,6 +52,24 @@ const Home = () => {
         const originalText = btn.innerText;
         btn.innerText = 'Added ✓';
         setTimeout(() => { btn.innerText = originalText; }, 1500);
+    };
+
+    const handleToggleWishlist = (e, productId) => {
+        e.preventDefault();
+
+        const product = products.find(p => Number(p.id) === Number(productId));
+
+        dispatch(toggleWishlist(productId));
+
+        // ✅ 🔥 META PIXEL EVENT
+        if (window.fbq && product) {
+            window.fbq('track', 'AddToWishlist', {
+                content_name: product.name,
+                content_ids: [product.id],
+                value: product.price,
+                currency: 'INR'
+            });
+        }
     };
 
     return (
@@ -139,9 +159,22 @@ const Home = () => {
                                             <div className="card-body text-center p-4"
                                                 style={{ border: '1px solid rgba(216, 166, 72, 0.2)', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.02)' }}>
                                                 <div className="mb-4 position-relative">
-                                                    {/* <div
-                                                        style={{ position: 'absolute', top: 0, right: 0, background: 'var(--gold-primary)', color: '#000', padding: '5px 10px', fontWeight: 'bold', borderRadius: '4px', fontSize: '0.8rem', zIndex: 2 }}>
-                                                        40% OFF</div> */}
+                                                    <button
+                                                        onClick={(e) => handleToggleWishlist(e, product.id)}
+                                                        style={{
+                                                            position: 'absolute',
+                                                            top: '10px',
+                                                            right: '10px',
+                                                            background: 'transparent',
+                                                            border: 'none',
+                                                            fontSize: '1.5rem',
+                                                            color: wishlistItems.some(item => Number(item.productId) === Number(product.id)) ? 'var(--gold-primary)' : 'rgba(255, 255, 255, 0.5)',
+                                                            zIndex: 2,
+                                                            transition: 'color 0.3s ease'
+                                                        }}
+                                                    >
+                                                        <i className={wishlistItems.some(item => Number(item.productId) === Number(product.id)) ? "bi bi-heart-fill" : "bi bi-heart"}></i>
+                                                    </button>
                                                     <Link to={`/product/${product.id}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '250px', padding: '15px' }}>
                                                         <img src={product.imageUrl || defaultImage} alt={product.name} className="img-fluid"
                                                             style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', filter: 'drop-shadow(0 5px 15px rgba(0,0,0,0.5))', transition: 'transform 0.3s' }}

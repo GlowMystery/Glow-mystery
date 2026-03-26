@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../features/cartSlice';
 import { fetchProductById } from '../features/productSlice';
 import { createReview } from '../features/reviewSlice';
+import { toggleWishlist } from '../features/wishlistSlice';
 import Loader from '../components/Loader';
 import { toast } from 'react-toastify';
 import { io } from 'socket.io-client';
@@ -15,6 +16,7 @@ const ProductDetails = () => {
     const dispatch = useDispatch();
     const { selectedProduct: product, loading, error } = useSelector((state) => state.product);
     const cartItems = useSelector((state) => state.cart.items);
+    const wishlistItems = useSelector((state) => state.wishlist.items);
 
     const [qty, setQty] = useState(1);
     const [showReviewForm, setShowReviewForm] = useState(false);
@@ -83,6 +85,21 @@ const ProductDetails = () => {
                 btn.innerHTML = originalHTML;
                 btn.classList.replace('btn-success', 'btn-gold');
             }, 2000);
+        }
+    };
+
+    const handleToggleWishlist = (e) => {
+        e.preventDefault();
+        if (product) {
+            dispatch(toggleWishlist(product.id));
+        }
+        if (window.fbq && product) {
+            window.fbq('track', 'AddToWishlist', {
+                content_name: product.name,
+                content_ids: [product.id],
+                value: product.price,
+                currency: 'INR'
+            });
         }
     };
 
@@ -382,6 +399,17 @@ const ProductDetails = () => {
                                         >
                                             <IoCartOutline size={20} />
                                             <span className="btn-label">Add to Cart</span>
+                                        </button>
+                                        <button
+                                            className="btn btn-gold-outline"
+                                            onClick={handleToggleWishlist}
+                                            style={{
+                                                fontSize: '1.25rem',
+                                                padding: '10px 15px',
+                                            }}
+                                            title="Toggle Wishlist"
+                                        >
+                                            <i className={wishlistItems.some(item => Number(item.productId) === Number(product.id)) ? "bi bi-heart-fill text-gold" : "bi bi-heart"}></i>
                                         </button>
                                     </div>
 
