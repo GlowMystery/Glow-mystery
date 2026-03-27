@@ -48,6 +48,15 @@ const Home = () => {
         }
 
         dispatch(addToCart(product));
+          if (window.fbq) {
+        window.fbq('track', 'AddToCart', {
+            content_name: product.name,
+            content_ids: [product.productId], // ✅ FIXED
+            content_type: 'product',
+            value: product.price,
+            currency: 'INR'
+        });
+    }
         const btn = e.target;
         const originalText = btn.innerText;
         btn.innerText = 'Added ✓';
